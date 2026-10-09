@@ -12,7 +12,7 @@ Vietnamese and English, responsive layout, accessible controls and reduced-motio
 
 GitHub Actions checks public service endpoints on a five-minute schedule and publishes a sanitized snapshot. The browser reloads the snapshot every 60 seconds. Results older than 20 minutes are shown as unknown. Missing observations are never reported as uptime.
 
-Only the canonical root displays the status interface. The old `/status` address redirects to the root. API routes are separate from page routes.
+Only the canonical root displays the status interface. API routes are separate from page routes.
 
 ## Run locally
 

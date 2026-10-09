@@ -5,7 +5,7 @@ const translations = {
   vi: {
     skip: 'Đến nội dung chính', university: 'Đại học Phan Châu Trinh', systemStatus: 'Trạng thái hệ thống', serviceCenter: 'TRUNG TÂM TRẠNG THÁI DỊCH VỤ',
     openIms: 'Truy cập IMS', tryIms: 'Thử truy cập IMS', refresh: 'Cập nhật trạng thái', refreshing: 'Đang cập nhật…', independent: 'Trang này hoạt động độc lập với máy chủ IMS.',
-    connection: 'KẾT NỐI HỆ THỐNG', identityTagline: 'Đồng hành cùng bạn', teamWorking: 'Đội ngũ kỹ thuật đang khẩn trương khắc phục vấn đề.', hereForYou: 'Thông tin bạn cần, ngay tại đây.', lastCheck: 'Kiểm tra gần nhất', noData: 'Chưa có dữ liệu', atAGlance: 'TỔNG QUAN', servicesTitle: 'Trạng thái các dịch vụ',
+    connection: 'KẾT NỐI HỆ THỐNG', identityTagline: 'Đồng hành cùng bạn', teamWorking: 'Đội ngũ kỹ thuật đang cật lực khắc phục vấn đề.', hereForYou: 'Thông tin bạn cần, ngay tại đây.', lastCheck: 'Kiểm tra gần nhất', noData: 'Chưa có dữ liệu', atAGlance: 'TỔNG QUAN', servicesTitle: 'Trạng thái các dịch vụ',
     operational: 'Hoạt động', degraded: 'Gián đoạn một phần', down: 'Không truy cập được', unknown: 'Chưa xác định', maintenance: 'Đang bảo trì',
     helpTitle: 'Bạn có thể làm gì?', helpDescription: 'Một vài gợi ý để việc học tập và công việc của bạn tiếp tục thuận lợi.', stepOneTitle: 'Giữ trang này mở', stepOne: 'Trạng thái sẽ tự cập nhật khi có dữ liệu mới.',
     stepTwoTitle: 'Lưu công việc đang làm', stepTwo: 'Giữ bản sao nội dung chưa gửi, nếu có thể.', stepThreeTitle: 'Cần hỗ trợ gấp?', stepThree: 'Liên hệ giảng viên hoặc bộ phận phụ trách nếu bạn đang có bài thi hay hạn nộp.',
@@ -14,7 +14,7 @@ const translations = {
     updatesTitle: 'Cập nhật gần đây', vietnamTime: 'Giờ Việt Nam · UTC+7', goodToKnow: 'THÔNG TIN HỮU ÍCH', faqTitle: 'Giải đáp nhanh', faqIntro: 'Để bạn an tâm hơn trong lúc chờ hệ thống.',
     faqOneTitle: 'Khi nào tôi có thể truy cập lại?', faqOne: 'Khi các dịch vụ hoạt động trở lại, trạng thái sẽ được cập nhật. Nếu chưa có thông báo thời gian khôi phục, chúng tôi chưa thể đưa ra một mốc chính xác.',
     faqTwoTitle: 'Đây là bảo trì hay sự cố máy chủ?', faqTwo: 'Bảo trì theo kế hoạch chỉ được hiển thị khi có cấu hình thông báo. Trạng thái không truy cập được có thể do mạng, dịch vụ hoặc điện nguồn; kiểm tra từ bên ngoài chưa xác định được nguyên nhân.',
-    faqThreeTitle: 'Trạng thái có được cập nhật tức thì không?', faqThree: 'GitHub kiểm tra theo lịch dự kiến mỗi 5 phút, sau đó xuất bản dữ liệu. Trang tải lại dữ liệu mỗi 60 giây. Lịch kiểm tra có thể bị trễ; luôn xem thời điểm kiểm tra gần nhất.',
+    faqThreeTitle: 'Trạng thái có được cập nhật tức thì không?', faqThree: 'Hệ thống giám sát kiểm tra theo lịch dự kiến mỗi 5 phút, sau đó xuất bản dữ liệu. Trang tải lại dữ liệu mỗi 60 giây. Lịch kiểm tra có thể bị trễ; luôn xem thời điểm kiểm tra gần nhất.',
     faqFourTitle: 'Nếu tôi đang thi hoặc có hạn nộp thì sao?', faqFour: 'Lưu nội dung đang làm nếu có thể và ghi lại thời điểm gặp sự cố. Liên hệ giảng viên hoặc bộ phận phụ trách để nhận hướng dẫn cho bài thi hoặc hạn nộp của bạn.',
     footer: 'Đồng hành cùng học tập & quản lý.', footerStatus: 'Trang bảo trì & trạng thái hệ thống', monitorFresh: 'Đang cập nhật tự động', monitorWaiting: 'Đang chờ dữ liệu', monitorStale: 'Dữ liệu cần được cập nhật',
     countdown: n => `Tải lại dữ liệu sau ${n} giây`, emptyEvents: 'Chưa có thay đổi trạng thái được ghi nhận.',
@@ -23,20 +23,20 @@ const translations = {
     waitingNotice: 'Chưa có kết quả kiểm tra. Trạng thái sẽ được cập nhật ngay khi có dữ liệu mới từ hệ thống giám sát.',
     fetchNotice: 'Chưa tải được dữ liệu mới. Kiểm tra kết nối mạng của bạn; thời điểm kiểm tra gần nhất vẫn được hiển thị bên trên.', offlineNotice: 'Thiết bị của bạn đang ngoại tuyến. Các trạng thái bên dưới không phải kết quả kiểm tra mới.',
     historyLabel: (date, state, count) => `${date}: ${state}${count ? ` · ${count} lần kiểm tra` : ''}`,
-    unavailable: 'Chưa kiểm tra được', unknownReason: 'Chưa nhận được kết quả', timeout: 'Không phản hồi trong thời gian kiểm tra', http_error: 'Phản hồi không thành công', invalid_response: 'Phản hồi không hợp lệ', network_error: 'Không kết nối được từ GitHub', not_measured: 'Chưa có phép đo', stale: 'Dữ liệu chưa đủ mới', slow: 'Phản hồi chậm',
+    unavailable: 'Chưa kiểm tra được', unknownReason: 'Chưa nhận được kết quả', timeout: 'Không phản hồi trong thời gian kiểm tra', http_error: 'Phản hồi không thành công', invalid_response: 'Phản hồi không hợp lệ', network_error: 'Không kết nối được', not_measured: 'Chưa có phép đo', stale: 'Dữ liệu chưa đủ mới', slow: 'Phản hồi chậm',
     hero: {
       unknown: ['Luôn kết nối.', 'Luôn được cập nhật.', 'Theo dõi tình trạng IMS tại một nơi. Trang đang chờ kết quả kiểm tra từ hệ thống giám sát độc lập.'],
       operational: ['Mọi thứ đã sẵn sàng.', 'Tiếp tục cùng IMS.', 'Các dịch vụ được giám sát đang phản hồi bình thường. Bạn có thể quay lại hệ thống để tiếp tục học tập và làm việc.'],
-      maintenance: ['Một chút chờ đợi.', 'Để phục vụ tốt hơn.', 'Đội ngũ kỹ thuật đang khẩn trương bảo trì và kiểm tra hệ thống. Cảm ơn bạn đã kiên nhẫn; chúng tôi sẽ cập nhật thông tin mới ngay tại đây.'],
-      down: ['Hệ thống tạm gián đoạn.', 'Chúng tôi đang khắc phục.', 'Hiện chưa kết nối được với website và máy chủ ứng dụng IMS. Đội ngũ kỹ thuật đang nỗ lực xác định nguyên nhân và khôi phục dịch vụ sớm nhất có thể. Cảm ơn bạn đã thông cảm.'],
-      degraded: ['Một số dịch vụ gián đoạn.', 'Đội ngũ đang xử lý.', 'Một số dịch vụ đang phản hồi chậm hoặc chưa truy cập được. Đội ngũ kỹ thuật đang khẩn trương kiểm tra và khắc phục vấn đề; bạn có thể theo dõi chi tiết bên dưới.'],
+      maintenance: ['Một chút chờ đợi.', 'Để phục vụ tốt hơn.', 'Đội ngũ kỹ thuật đang cật lực bảo trì và kiểm tra hệ thống. Cảm ơn bạn đã kiên nhẫn; thông tin mới sẽ được cập nhật ngay tại đây.'],
+      down: ['Hệ thống tạm gián đoạn.', 'Đội ngũ đang cật lực khắc phục.', 'Hiện chưa truy cập được IMS. Đội ngũ kỹ thuật đang cật lực khắc phục vấn đề để khôi phục dịch vụ sớm nhất có thể. Cảm ơn bạn đã kiên nhẫn và thông cảm.'],
+      degraded: ['Một số dịch vụ gián đoạn.', 'Đội ngũ đang cật lực khắc phục.', 'Một số dịch vụ đang phản hồi chậm hoặc chưa truy cập được. Đội ngũ kỹ thuật đang cật lực khắc phục vấn đề; bạn có thể theo dõi chi tiết bên dưới.'],
       stale: ['Chờ một cập nhật mới.', 'Chúng tôi vẫn ở đây.', 'Kết quả giám sát gần nhất chưa đủ mới để xác nhận tình trạng hiện tại. Bạn có thể thử truy cập IMS hoặc tải lại dữ liệu sau.']
     }
   },
   en: {
     skip: 'Skip to main content', university: 'Phan Chau Trinh University', systemStatus: 'System status', serviceCenter: 'SERVICE STATUS CENTER',
     openIms: 'Open IMS', tryIms: 'Try opening IMS', refresh: 'Refresh status', refreshing: 'Refreshing…', independent: 'This page runs independently of the IMS server.',
-    connection: 'SYSTEM CONNECTION', identityTagline: 'Here for you', teamWorking: 'Our technical team is working hard to restore service.', hereForYou: 'The information you need, right here.', lastCheck: 'Last checked', noData: 'No data yet', atAGlance: 'AT A GLANCE', servicesTitle: 'Service status',
+    connection: 'SYSTEM CONNECTION', identityTagline: 'Here for you', teamWorking: 'Our technical team is working hard to fix the issue.', hereForYou: 'The information you need, right here.', lastCheck: 'Last checked', noData: 'No data yet', atAGlance: 'AT A GLANCE', servicesTitle: 'Service status',
     operational: 'Operational', degraded: 'Partial disruption', down: 'Unreachable', unknown: 'Unknown', maintenance: 'Under maintenance',
     helpTitle: 'What can you do?', helpDescription: 'A few helpful steps to keep your studies and work on track.', stepOneTitle: 'Keep this page open', stepOne: 'Status refreshes automatically when new data is available.',
     stepTwoTitle: 'Save your work', stepTwo: 'Keep a copy of any unsubmitted content, if possible.', stepThreeTitle: 'Need urgent help?', stepThree: 'Contact your lecturer or responsible team if you have an exam or a submission deadline.',
@@ -45,7 +45,7 @@ const translations = {
     updatesTitle: 'Recent updates', vietnamTime: 'Vietnam time · UTC+7', goodToKnow: 'GOOD TO KNOW', faqTitle: 'Quick answers', faqIntro: 'A little clarity while you wait.',
     faqOneTitle: 'When can I access IMS again?', faqOne: 'Status will update when services become available again. Without a confirmed recovery estimate, we cannot provide an exact time.',
     faqTwoTitle: 'Is this maintenance or a server outage?', faqTwo: 'Scheduled maintenance appears only when a notice has been configured. Unreachable services may be caused by connectivity, services or power; external checks cannot determine the cause.',
-    faqThreeTitle: 'Are these real-time updates?', faqThree: 'GitHub is scheduled to check every 5 minutes and then publish the results. This page reloads data every 60 seconds. Checks may be delayed; always look at the last checked time.',
+    faqThreeTitle: 'Are these real-time updates?', faqThree: 'The monitoring system is scheduled to check every 5 minutes and then publish the results. This page reloads data every 60 seconds. Checks may be delayed; always look at the last checked time.',
     faqFourTitle: 'What if I have an exam or a deadline?', faqFour: 'Save your work if possible and note when the issue occurred. Contact your lecturer or responsible team for guidance on your exam or deadline.',
     footer: 'Supporting learning & administration.', footerStatus: 'Maintenance & system status', monitorFresh: 'Automatic updates enabled', monitorWaiting: 'Waiting for data', monitorStale: 'Awaiting an updated check',
     countdown: n => `Reloading data in ${n}s`, emptyEvents: 'No status changes have been recorded yet.',
@@ -54,13 +54,13 @@ const translations = {
     waitingNotice: 'No checks have been recorded yet. Status will update as soon as new monitoring results are available.',
     fetchNotice: 'New data could not be loaded. Check your connection; the last checked time is still shown above.', offlineNotice: 'Your device is offline. The statuses below are not new check results.',
     historyLabel: (date, state, count) => `${date}: ${state}${count ? ` · ${count} ${count === 1 ? 'check' : 'checks'}` : ''}`,
-    unavailable: 'Not checked yet', unknownReason: 'No result received', timeout: 'No response within the check window', http_error: 'Unsuccessful response', invalid_response: 'Invalid response', network_error: 'GitHub could not connect', not_measured: 'No measurement', stale: 'Data is not recent enough', slow: 'Slow response',
+    unavailable: 'Not checked yet', unknownReason: 'No result received', timeout: 'No response within the check window', http_error: 'Unsuccessful response', invalid_response: 'Invalid response', network_error: 'Could not connect', not_measured: 'No measurement', stale: 'Data is not recent enough', slow: 'Slow response',
     hero: {
       unknown: ['Stay connected.', 'Stay informed.', 'Follow IMS service status in one place. We are waiting for results from the independent monitoring system.'],
       operational: ['Everything is ready.', 'Welcome back to IMS.', 'Monitored services are responding normally. You can return to the platform to continue your studies and work.'],
       maintenance: ['A little pause.', 'A better experience.', 'Our technical team is carrying out maintenance and system checks. Thank you for your patience; the latest updates will appear here.'],
-      down: ['Service is interrupted.', 'We’re working on it.', 'The IMS website and application server cannot currently be reached. Our technical team is investigating the cause and working hard to restore service as soon as possible. Thank you for your understanding.'],
-      degraded: ['Some services are disrupted.', 'Our team is on it.', 'Some services are responding slowly or cannot be reached. Our technical team is investigating and working to resolve the issue. Follow the service details below for updates.'],
+      down: ['Service is interrupted.', 'Our team is working hard on it.', 'IMS cannot currently be reached. Our technical team is working hard to fix the issue and restore service as soon as possible. Thank you for your patience and understanding.'],
+      degraded: ['Some services are disrupted.', 'Our team is working hard on it.', 'Some services are responding slowly or cannot be reached. Our technical team is working hard to fix the issue. Follow the service details below for updates.'],
       stale: ['Waiting for an update.', 'Still here for you.', 'The latest monitoring results are not recent enough to confirm current status. You can try opening IMS or reload the data later.']
     }
   }
@@ -150,6 +150,9 @@ function renderHistory() {
   }) : [element('p', 'empty-events', text('emptyEvents'))]));
 }
 
+// IMS sends visitors here with ?from=ims when it cannot reach the server.
+const redirectedFromIms = new URLSearchParams(window.location.search).get('from') === 'ims';
+
 function render() {
   const view = viewSnapshot(snapshot);
   const hasTimestamp = validDate(snapshot?.checkedAt);
@@ -164,7 +167,7 @@ function render() {
   $('hero-title').replaceChildren(document.createTextNode(hero[0]), document.createElement('br'), titleSecond);
   const manualMessage = view.maintenance.message?.[language];
   $('hero-description').textContent = view.overall === 'maintenance' && typeof manualMessage === 'string' && manualMessage.trim() ? manualMessage : hero[2];
-  $('team-notice').hidden = !['down', 'degraded', 'maintenance'].includes(view.overall);
+  $('team-notice').hidden = !redirectedFromIms && !['down', 'degraded', 'maintenance'].includes(view.overall);
   $('overall-label').textContent = text(view.overall);
   $('visual-label').textContent = view.overall === 'unknown' ? text('unavailable') : text(view.overall);
   $('monitor-label').textContent = view.fresh ? text('monitorFresh') : hasTimestamp ? text('monitorStale') : text('monitorWaiting');
