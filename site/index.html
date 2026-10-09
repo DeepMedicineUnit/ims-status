@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173e44">
+  <meta name="description" content="Trang bảo trì và trạng thái hệ thống IMS, Đại học Phan Châu Trinh. IMS maintenance and system status.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'">
+  <title>Trạng thái hệ thống · PCTU IMS</title>
+  <link rel="canonical" href="https://statusims.pctu.edu.vn/">
+  <link rel="icon" href="./assets/logo.png" type="image/png">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body data-state="unknown">
+  <a class="skip-link" href="#main" data-i18n="skip">Đến nội dung chính</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="https://ims.pctu.edu.vn" aria-label="PCTU IMS">
+        <img src="./assets/logo.png" width="48" height="48" alt="Đại học Phan Châu Trinh">
+        <span class="brand-copy"><strong>PCTU <span>IMS</span></strong><span data-i18n="university">Đại học Phan Châu Trinh</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Navigation">
+        <a class="nav-link" href="#services" data-i18n="systemStatus">Trạng thái hệ thống</a>
+        <div class="language-switch" role="group" aria-label="Language / Ngôn ngữ">
+          <button type="button" data-language="vi" aria-pressed="true" lang="vi">VI</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-language="en" aria-pressed="false" lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-shell">
+    <div class="page-heading"><span class="eyebrow" data-i18n="serviceCenter">TRUNG TÂM TRẠNG THÁI DỊCH VỤ</span><span class="monitor-label"><span class="dot"></span><span id="monitor-label">Đang chờ dữ liệu</span></span></div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="state-badge"><span class="dot"></span><span id="overall-label">Chưa xác định</span></div>
+        <h1 id="hero-title">Luôn kết nối.<br><span>Luôn được cập nhật.</span></h1>
+        <p class="hero-description" id="hero-description">Theo dõi tình trạng IMS tại một nơi. Trang đang chờ kết quả kiểm tra từ hệ thống giám sát độc lập.</p>
+        <div class="team-notice" id="team-notice" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4a5 5 0 0 0-6 6L3 16l5 5 6-6a5 5 0 0 0 6-6l-4 3-4-4 3-4Z"/></svg><span data-i18n="teamWorking">Đội ngũ kỹ thuật đang khẩn trương khắc phục vấn đề.</span></div>
+        <p class="expected-return" id="expected-return" hidden></p>
+        <div class="hero-actions">
+          <a id="main-link" class="button button-primary" href="https://ims.pctu.edu.vn"><span data-i18n="openIms">Truy cập IMS</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+          <button class="button button-secondary" id="refresh" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0 1 11.5-1L20 9M4 15l2.4 3A7 7 0 0 0 18 17"/></svg><span data-i18n="refresh">Cập nhật trạng thái</span></button>
+        </div>
+        <div class="hero-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm-4 9 3 3 5-6"/></svg><span data-i18n="independent">Trang này hoạt động độc lập với máy chủ IMS.</span></div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="visual-grid"></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="visual-spark spark-one">+</div><div class="visual-spark spark-two">+</div><div class="visual-spark spark-three">+</div>
+        <div class="floating-tag identity-tag"><svg viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Zm4 2v6c4 3 8 3 12 0v-6M22 9v7"/></svg><span><strong>PCTU IMS</strong><small data-i18n="identityTagline">Đồng hành cùng bạn</small></span></div>
+        <svg class="server-illustration" viewBox="0 0 460 350" fill="none">
+          <defs>
+            <linearGradient id="server-front" x1="125" y1="100" x2="300" y2="320" gradientUnits="userSpaceOnUse"><stop stop-color="#315d65"/><stop offset="1" stop-color="#153941"/></linearGradient>
+            <linearGradient id="server-top" x1="180" y1="56" x2="310" y2="128" gradientUnits="userSpaceOnUse"><stop stop-color="#79a2a3"/><stop offset="1" stop-color="#446e76"/></linearGradient>
+          </defs>
+          <ellipse cx="243" cy="293" rx="140" ry="31" fill="#184a4d" opacity=".08"/>
+          <path d="m72 268 145-83 152 87-145 83-152-87Z" fill="#e2efea" stroke="#cbdfd8"/>
+          <path class="connection-path" d="M91 277h40l29-17m144-4 30 17h48" stroke="#82b6a2" stroke-width="2" stroke-dasharray="5 5"/>
+          <g class="server-body">
+            <path d="m160 96 71-41 109 63-71 42-109-64Z" fill="url(#server-top)"/>
+            <path d="M269 160v135l71-41V118l-71 42Z" fill="#17343c"/>
+            <path d="M160 96v136l109 63V160L160 96Z" fill="url(#server-front)"/>
+            <path d="m170 121 88 51v30l-88-51v-30Z" fill="#112c33" stroke="#47777d"/>
+            <path d="m170 163 88 51v30l-88-51v-30Z" fill="#112c33" stroke="#47777d"/>
+            <path d="m170 205 88 51v25l-88-51v-25Z" fill="#112c33" stroke="#47777d"/>
+            <g stroke="#547c81" stroke-width="3"><path d="m181 137 40 23m-40 19 40 23m-40 19 40 23"/></g>
+            <g class="server-led" fill="#87d6b7"><ellipse cx="240" cy="177" rx="3" ry="4"/><ellipse cx="250" cy="183" rx="3" ry="4"/><ellipse cx="240" cy="219" rx="3" ry="4"/><ellipse cx="250" cy="225" rx="3" ry="4"/><ellipse cx="240" cy="258" rx="3" ry="4"/><ellipse cx="250" cy="264" rx="3" ry="4"/></g>
+            <path d="m287 169 33-19m-33 31 33-19m-33 31 33-19m-33 31 33-19" stroke="#36555d" stroke-width="3"/>
+            <path d="m190 95 40-23 48 28-40 23-48-28Z" stroke="#9cbabc" opacity=".5"/>
+          </g>
+          <g class="plant"><path d="M110 262v-34" stroke="#427a61" stroke-width="3"/><path d="M110 243c-25-1-26-23-26-23s26-2 26 23Zm0-9c1-23 21-24 21-24s3 20-21 24Z" fill="#82b599"/><path d="m94 257 8 29h17l8-29H94Z" fill="#cfb69a"/><path d="M95 257h31" stroke="#b49b7e" stroke-width="3"/></g>
+          <g class="mini-block"><path d="m343 279 23-13 24 14-23 13-24-14Z" fill="#fdfaf5" stroke="#d6ddcf"/><path d="M343 279v17l24 14v-17l-24-14Z" fill="#d9e5da"/><path d="M367 293v17l23-13v-17l-23 13Z" fill="#bacdc0"/></g>
+        </svg>
+        <div class="floating-tag status-tag"><span class="status-tag-icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></span><span><small data-i18n="connection">KẾT NỐI HỆ THỐNG</small><strong id="visual-label">Đang chờ kiểm tra</strong></span><span class="signal-bars"><i></i><i></i><i></i><i></i></span></div>
+        <div class="visual-caption"><span class="dot"></span><span data-i18n="hereForYou">Thông tin bạn cần, ngay tại đây.</span></div>
+      </div>
+    </section>
+
+    <div class="update-strip">
+      <div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg><span data-i18n="lastCheck">Kiểm tra gần nhất</span><strong id="last-checked">Chưa có dữ liệu</strong></div>
+      <div class="next-check"><span class="refresh-dot"></span><span id="refresh-countdown">Tự cập nhật dữ liệu mỗi 60 giây</span></div>
+    </div>
+    <p id="data-notice" class="data-notice" role="status" hidden></p>
+    <noscript><p class="data-notice">Vui lòng bật JavaScript để xem trạng thái. Please enable JavaScript to view status. <a href="./status.json">Dữ liệu / Status data</a></p></noscript>
+
+    <div class="content-grid">
+      <section class="services-panel panel" id="services" aria-labelledby="services-title">
+        <div class="section-header"><div><span class="eyebrow" data-i18n="atAGlance">TỔNG QUAN</span><h2 id="services-title" data-i18n="servicesTitle">Trạng thái các dịch vụ</h2></div><span class="service-count" id="service-count">— / 7</span></div>
+        <div id="service-list" class="service-list"></div>
+        <div class="service-legend"><span><i class="dot operational"></i><span data-i18n="operational">Hoạt động</span></span><span><i class="dot degraded"></i><span data-i18n="degraded">Gián đoạn một phần</span></span><span><i class="dot down"></i><span data-i18n="down">Không truy cập được</span></span><span><i class="dot unknown"></i><span data-i18n="unknown">Chưa xác định</span></span></div>
+      </section>
+
+      <aside class="side-panels">
+        <section class="help-panel panel"><div class="help-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14v-3a7 7 0 0 1 14 0v3M5 11H3v6h4v-6H5Zm14 0h2v6h-4v-6h2Zm0 6v2h-7"/></svg></div><h2 data-i18n="helpTitle">Bạn có thể làm gì?</h2><p data-i18n="helpDescription">Một vài gợi ý để việc học tập và công việc của bạn tiếp tục thuận lợi.</p><ol class="help-steps"><li><span>01</span><div><strong data-i18n="stepOneTitle">Giữ trang này mở</strong><p data-i18n="stepOne">Trạng thái sẽ tự cập nhật khi có dữ liệu mới.</p></div></li><li><span>02</span><div><strong data-i18n="stepTwoTitle">Lưu công việc đang làm</strong><p data-i18n="stepTwo">Giữ bản sao nội dung chưa gửi, nếu có thể.</p></div></li><li><span>03</span><div><strong data-i18n="stepThreeTitle">Cần hỗ trợ gấp?</strong><p data-i18n="stepThree">Liên hệ giảng viên hoặc bộ phận phụ trách nếu bạn đang có bài thi hay hạn nộp.</p></div></li></ol><a id="support-link" class="support-link" hidden></a></section>
+        <section class="independent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm-4 9 3 3 5-6"/></svg><div><h3 data-i18n="independentTitle">Một kênh cập nhật độc lập</h3><p data-i18n="independentDescription">Bạn vẫn xem được thông tin tại đây khi máy chủ IMS gặp sự cố.</p></div></section>
+      </aside>
+    </div>
+
+    <section class="history-panel panel" aria-labelledby="history-title"><div class="section-header"><div><span class="eyebrow" data-i18n="monitoringHistory">LỊCH SỬ GIÁM SÁT</span><h2 id="history-title" data-i18n="historyTitle">24 giờ gần đây</h2></div><span class="history-note" data-i18n="historyNote">Chỉ hiển thị kết quả đã ghi nhận</span></div><div id="history-bars" class="history-bars"></div><div class="history-labels"><span data-i18n="hoursAgo">23 giờ trước</span><span data-i18n="noDataLegend">Màu xám: chưa có dữ liệu</span><span data-i18n="thisHour">Giờ hiện tại</span></div><div class="events-header"><h3 data-i18n="updatesTitle">Cập nhật gần đây</h3><span data-i18n="vietnamTime">Giờ Việt Nam · UTC+7</span></div><div id="events" class="events"></div></section>
+
+    <section class="faq-section" aria-labelledby="faq-title"><div class="faq-intro"><span class="eyebrow" data-i18n="goodToKnow">THÔNG TIN HỮU ÍCH</span><h2 id="faq-title" data-i18n="faqTitle">Giải đáp nhanh</h2><p data-i18n="faqIntro">Để bạn an tâm hơn trong lúc chờ hệ thống.</p></div><div class="faq-list"><details><summary><span data-i18n="faqOneTitle">Khi nào tôi có thể truy cập lại?</span><span class="faq-plus" aria-hidden="true">+</span></summary><p data-i18n="faqOne">Khi các dịch vụ hoạt động trở lại, trạng thái sẽ được cập nhật. Nếu chưa có thông báo thời gian khôi phục, chúng tôi chưa thể đưa ra một mốc chính xác.</p></details><details><summary><span data-i18n="faqTwoTitle">Đây là bảo trì hay sự cố máy chủ?</span><span class="faq-plus" aria-hidden="true">+</span></summary><p data-i18n="faqTwo">Bảo trì theo kế hoạch chỉ được hiển thị khi có cấu hình thông báo. Trạng thái không truy cập được có thể do mạng, dịch vụ hoặc điện nguồn; kiểm tra từ bên ngoài chưa xác định được nguyên nhân.</p></details><details><summary><span data-i18n="faqThreeTitle">Trạng thái có được cập nhật tức thì không?</span><span class="faq-plus" aria-hidden="true">+</span></summary><p data-i18n="faqThree">GitHub kiểm tra theo lịch dự kiến mỗi 5 phút, sau đó xuất bản dữ liệu. Trang tải lại dữ liệu mỗi 60 giây. Lịch kiểm tra có thể bị trễ; luôn xem thời điểm kiểm tra gần nhất.</p></details><details><summary><span data-i18n="faqFourTitle">Nếu tôi đang thi hoặc có hạn nộp thì sao?</span><span class="faq-plus" aria-hidden="true">+</span></summary><p data-i18n="faqFour">Lưu nội dung đang làm nếu có thể và ghi lại thời điểm gặp sự cố. Liên hệ giảng viên hoặc bộ phận phụ trách để nhận hướng dẫn cho bài thi hoặc hạn nộp của bạn.</p></details></div></section>
+  </main>
+  <footer class="site-footer"><div><span class="footer-brand">PCTU IMS</span><span data-i18n="footer">Đồng hành cùng học tập & quản lý.</span></div><span data-i18n="footerStatus">Trang bảo trì & trạng thái hệ thống</span></footer>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+name: Monitor IMS and publish status page
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Every five minutes, offset from the start of the hour.
+    - cron: '2-59/5 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ims-status-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate status logic
+        run: npm test
+      - name: Prepare static page
+        run: npm run build
+      - name: Check IMS from GitHub
+        run: npm run monitor
+        env:
+          STATUS_SITE_URL: ${{ vars.STATUS_SITE_URL }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish independent status page
+        id: deployment
+        uses: actions/deploy-pages@v4

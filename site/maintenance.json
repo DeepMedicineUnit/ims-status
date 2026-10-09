@@ -1,0 +1,10 @@
+{
+  "active": false,
+  "startsAt": null,
+  "endsAt": null,
+  "expectedReturnAt": null,
+  "message": {
+    "vi": "Đội ngũ kỹ thuật đang khẩn trương bảo trì và kiểm tra hệ thống. Cảm ơn bạn đã kiên nhẫn; chúng tôi sẽ cập nhật thông tin mới ngay tại đây.",
+    "en": "Our technical team is carrying out maintenance and system checks. Thank you for your patience; the latest updates will appear here."
+  }
+}
