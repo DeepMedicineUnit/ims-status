@@ -1,5 +1,5 @@
 import { config } from './config.js';
-import { serviceDefinitions, viewSnapshot, historyBins, normalizeStatus, validDate } from './status-model.js';
+import { serviceDefinitions, viewSnapshot, historyBins, normalizeStatus, validDate, overallStatus } from './status-model.js';
 
 const translations = {
   vi: {
@@ -21,6 +21,7 @@ const translations = {
     initialEvent: 'Bắt đầu ghi nhận trạng thái hệ thống.', transitionEvent: state => `Trạng thái hệ thống: ${state}.`, expected: date => `Dự kiến khôi phục: ${date} (có thể thay đổi).`,
     staleNotice: 'Thời điểm kiểm tra không hợp lệ hoặc kết quả không còn đủ mới. Chưa thể xác nhận trạng thái hiện tại; các kết quả cũ không được xem là đang hoạt động.',
     waitingNotice: 'Chưa có kết quả kiểm tra. Trạng thái sẽ được cập nhật ngay khi có dữ liệu mới từ hệ thống giám sát.',
+    liveDownNotice: time => `Trình duyệt của bạn vừa kiểm tra lúc ${time}: chưa truy cập được IMS. Các dịch vụ khác chưa xác định được cho tới khi IMS hoạt động trở lại.`, liveDown: 'Kiểm tra trực tiếp: không truy cập được', liveUnknown: 'Chưa kiểm tra được khi IMS gián đoạn',
     fetchNotice: 'Chưa tải được dữ liệu mới. Kiểm tra kết nối mạng của bạn; thời điểm kiểm tra gần nhất vẫn được hiển thị bên trên.', offlineNotice: 'Thiết bị của bạn đang ngoại tuyến. Các trạng thái bên dưới không phải kết quả kiểm tra mới.',
     historyLabel: (date, state, count) => `${date}: ${state}${count ? ` · ${count} lần kiểm tra` : ''}`,
     unavailable: 'Chưa kiểm tra được', unknownReason: 'Chưa nhận được kết quả', timeout: 'Không phản hồi trong thời gian kiểm tra', http_error: 'Phản hồi không thành công', invalid_response: 'Phản hồi không hợp lệ', network_error: 'Không kết nối được', not_measured: 'Chưa có phép đo', stale: 'Dữ liệu chưa đủ mới', slow: 'Phản hồi chậm',
@@ -52,6 +53,7 @@ const translations = {
     initialEvent: 'System status monitoring started.', transitionEvent: state => `System status: ${state}.`, expected: date => `Estimated recovery: ${date} (subject to change).`,
     staleNotice: 'The check timestamp is invalid or the results are no longer recent enough. Current status cannot be confirmed; old results are not treated as operational.',
     waitingNotice: 'No checks have been recorded yet. Status will update as soon as new monitoring results are available.',
+    liveDownNotice: time => `Your browser checked at ${time}: IMS cannot be reached. Other services cannot be confirmed until IMS is back.`, liveDown: 'Live check: unreachable', liveUnknown: 'Cannot be checked while IMS is unavailable',
     fetchNotice: 'New data could not be loaded. Check your connection; the last checked time is still shown above.', offlineNotice: 'Your device is offline. The statuses below are not new check results.',
     historyLabel: (date, state, count) => `${date}: ${state}${count ? ` · ${count} ${count === 1 ? 'check' : 'checks'}` : ''}`,
     unavailable: 'Not checked yet', unknownReason: 'No result received', timeout: 'No response within the check window', http_error: 'Unsuccessful response', invalid_response: 'Invalid response', network_error: 'Could not connect', not_measured: 'No measurement', stale: 'Data is not recent enough', slow: 'Slow response',
@@ -153,10 +155,54 @@ function renderHistory() {
 // IMS sends visitors here with ?from=ims when it cannot reach the server.
 const redirectedFromIms = new URLSearchParams(window.location.search).get('from') === 'ims';
 
+// The GitHub snapshot can be minutes old (scheduled runs are often delayed), so the
+// visitor's browser also checks IMS directly. Docker down: IIS redirects the favicon
+// request to this HTML page and the image fails; server off: the request fails.
+let live = null;
+function probeWebsite() {
+  return new Promise(resolve => {
+    const image = new Image();
+    const timer = setTimeout(() => { image.src = ''; resolve(false); }, 10000);
+    image.onload = () => { clearTimeout(timer); resolve(true); };
+    image.onerror = () => { clearTimeout(timer); resolve(false); };
+    image.src = `${config.mainUrl.replace(/\/+$/, '')}/favicon.ico?t=${Date.now()}`;
+  });
+}
+async function probeApi() {
+  try {
+    const response = await fetch(config.apiHealthUrl, { cache: 'no-store', credentials: 'omit', signal: AbortSignal.timeout(10000) });
+    return response.ok;
+  } catch { return false; }
+}
+async function liveCheck() {
+  if (!navigator.onLine) return;
+  const [website, api] = await Promise.all([probeWebsite(), probeApi()]);
+  live = { website, api, at: new Date().toISOString() };
+  render();
+}
+function applyLive(view) {
+  if (!live) return view;
+  const services = { ...view.services };
+  const at = live.at;
+  if (live.api) services.API = { status: 'operational', checkedAt: at, responseMs: null };
+  if (live.website) {
+    if (services.WEBSITE.status !== 'operational') services.WEBSITE = { status: 'operational', checkedAt: at, responseMs: null };
+    return { ...view, services, overall: overallStatus(services, view.maintenance) };
+  }
+  // A failed API check alone may be a CORS rule, so it only counts when the portal also fails.
+  services.WEBSITE = { status: 'down', checkedAt: at, responseMs: null, reason: 'liveDown' };
+  if (!live.api) services.API = { status: 'down', checkedAt: at, responseMs: null, reason: 'liveDown' };
+  for (const def of serviceDefinitions) {
+    if (!def.infrastructure && !['WEBSITE', 'API'].includes(def.id)) services[def.id] = { status: 'unknown', checkedAt: at, responseMs: null, reason: 'liveUnknown' };
+  }
+  const overall = view.overall === 'maintenance' ? 'maintenance' : 'down';
+  return { ...view, services, overall, liveDown: true };
+}
+
 function render() {
-  const view = viewSnapshot(snapshot);
+  const view = applyLive(viewSnapshot(snapshot));
   const hasTimestamp = validDate(snapshot?.checkedAt);
-  const heroState = !view.fresh && hasTimestamp ? 'stale' : view.overall;
+  const heroState = view.liveDown ? view.overall : !view.fresh && hasTimestamp ? 'stale' : view.overall;
   document.body.dataset.state = view.overall;
   document.documentElement.lang = language;
   document.title = `${text('systemStatus')} · PCTU IMS`;
@@ -178,9 +224,9 @@ function render() {
   const expected = view.overall === 'maintenance' && validDate(view.maintenance.expectedReturnAt) && Date.parse(view.maintenance.expectedReturnAt) > Date.now();
   $('expected-return').hidden = !expected;
   $('expected-return').textContent = expected ? text('expected')(dateLabel(view.maintenance.expectedReturnAt)) : '';
-  const notice = !navigator.onLine ? 'offlineNotice' : loadFailed ? 'fetchNotice' : !view.fresh ? (hasTimestamp ? 'staleNotice' : 'waitingNotice') : '';
+  const notice = !navigator.onLine ? 'offlineNotice' : view.liveDown ? 'liveDownNotice' : loadFailed ? 'fetchNotice' : !view.fresh ? (hasTimestamp ? 'staleNotice' : 'waitingNotice') : '';
   $('data-notice').hidden = !notice;
-  $('data-notice').textContent = notice ? text(notice) : '';
+  $('data-notice').textContent = notice === 'liveDownNotice' ? text(notice)(dateLabel(live.at)) : notice ? text(notice) : '';
   $('refresh').disabled = fetching;
   $('refresh').classList.toggle('is-loading', fetching);
   $('refresh').querySelector('span').textContent = text(fetching ? 'refreshing' : 'refresh');
@@ -205,6 +251,7 @@ async function refresh() {
   fetching = true;
   lastFetch = Date.now();
   render();
+  liveCheck();
   try {
     const url = new URL('./status.json', import.meta.url);
     url.searchParams.set('t', String(Date.now()));
@@ -231,7 +278,7 @@ setInterval(() => {
   if (document.hidden) return;
   renderCountdown();
   // Re-render at stale boundaries even if the next fetch fails or the device goes offline.
-  if (viewSnapshot(snapshot).overall !== lastState) render();
+  if (applyLive(viewSnapshot(snapshot)).overall !== lastState) render();
   if (Date.now() - lastFetch >= config.refreshSeconds * 1000) refresh();
 }, 1000);
 render();
