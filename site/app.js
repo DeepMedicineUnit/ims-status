@@ -21,7 +21,7 @@ const translations = {
     initialEvent: 'Bắt đầu ghi nhận trạng thái hệ thống.', transitionEvent: state => `Trạng thái hệ thống: ${state}.`, expected: date => `Dự kiến khôi phục: ${date} (có thể thay đổi).`,
     staleNotice: 'Thời điểm kiểm tra không hợp lệ hoặc kết quả không còn đủ mới. Chưa thể xác nhận trạng thái hiện tại; các kết quả cũ không được xem là đang hoạt động.',
     waitingNotice: 'Chưa có kết quả kiểm tra. Trạng thái sẽ được cập nhật ngay khi có dữ liệu mới từ hệ thống giám sát.',
-    liveDownNotice: time => `Trình duyệt của bạn vừa kiểm tra lúc ${time}: chưa truy cập được IMS. Các dịch vụ khác chưa xác định được cho tới khi IMS hoạt động trở lại.`, liveDown: 'Kiểm tra trực tiếp: không truy cập được', liveUnknown: 'Chưa kiểm tra được khi IMS gián đoạn',
+    liveDownNotice: time => `Trình duyệt của bạn vừa kiểm tra lúc ${time}: chưa truy cập được IMS. Các dịch vụ khác chưa xác định được cho tới khi IMS hoạt động trở lại.`, liveDown: 'Kiểm tra trực tiếp: không truy cập được', liveUnknown: 'Chưa kiểm tra được khi IMS gián đoạn', checking: 'Đang kiểm tra trực tiếp IMS…',
     fetchNotice: 'Chưa tải được dữ liệu mới. Kiểm tra kết nối mạng của bạn; thời điểm kiểm tra gần nhất vẫn được hiển thị bên trên.', offlineNotice: 'Thiết bị của bạn đang ngoại tuyến. Các trạng thái bên dưới không phải kết quả kiểm tra mới.',
     historyLabel: (date, state, count) => `${date}: ${state}${count ? ` · ${count} lần kiểm tra` : ''}`,
     unavailable: 'Chưa kiểm tra được', unknownReason: 'Chưa nhận được kết quả', timeout: 'Không phản hồi trong thời gian kiểm tra', http_error: 'Phản hồi không thành công', invalid_response: 'Phản hồi không hợp lệ', network_error: 'Không kết nối được', not_measured: 'Chưa có phép đo', stale: 'Dữ liệu chưa đủ mới', slow: 'Phản hồi chậm',
@@ -53,7 +53,7 @@ const translations = {
     initialEvent: 'System status monitoring started.', transitionEvent: state => `System status: ${state}.`, expected: date => `Estimated recovery: ${date} (subject to change).`,
     staleNotice: 'The check timestamp is invalid or the results are no longer recent enough. Current status cannot be confirmed; old results are not treated as operational.',
     waitingNotice: 'No checks have been recorded yet. Status will update as soon as new monitoring results are available.',
-    liveDownNotice: time => `Your browser checked at ${time}: IMS cannot be reached. Other services cannot be confirmed until IMS is back.`, liveDown: 'Live check: unreachable', liveUnknown: 'Cannot be checked while IMS is unavailable',
+    liveDownNotice: time => `Your browser checked at ${time}: IMS cannot be reached. Other services cannot be confirmed until IMS is back.`, liveDown: 'Live check: unreachable', liveUnknown: 'Cannot be checked while IMS is unavailable', checking: 'Checking IMS directly…',
     fetchNotice: 'New data could not be loaded. Check your connection; the last checked time is still shown above.', offlineNotice: 'Your device is offline. The statuses below are not new check results.',
     historyLabel: (date, state, count) => `${date}: ${state}${count ? ` · ${count} ${count === 1 ? 'check' : 'checks'}` : ''}`,
     unavailable: 'Not checked yet', unknownReason: 'No result received', timeout: 'No response within the check window', http_error: 'Unsuccessful response', invalid_response: 'Invalid response', network_error: 'Could not connect', not_measured: 'No measurement', stale: 'Data is not recent enough', slow: 'Slow response',
@@ -181,7 +181,12 @@ async function liveCheck() {
   render();
 }
 function applyLive(view) {
-  if (!live) return view;
+  // Never show a green snapshot before this browser has confirmed IMS responds.
+  if (!live) {
+    if (!['operational', 'degraded'].includes(view.overall)) return view;
+    const services = Object.fromEntries(Object.entries(view.services).map(([id, service]) => [id, { ...service, status: 'unknown', responseMs: null, reason: 'checking' }]));
+    return { ...view, services, overall: 'unknown', checking: true };
+  }
   const services = { ...view.services };
   const at = live.at;
   if (live.api) services.API = { status: 'operational', checkedAt: at, responseMs: null };
@@ -202,7 +207,7 @@ function applyLive(view) {
 function render() {
   const view = applyLive(viewSnapshot(snapshot));
   const hasTimestamp = validDate(snapshot?.checkedAt);
-  const heroState = view.liveDown ? view.overall : !view.fresh && hasTimestamp ? 'stale' : view.overall;
+  const heroState = view.liveDown || view.checking ? view.overall : !view.fresh && hasTimestamp ? 'stale' : view.overall;
   document.body.dataset.state = view.overall;
   document.documentElement.lang = language;
   document.title = `${text('systemStatus')} · PCTU IMS`;
@@ -215,7 +220,7 @@ function render() {
   $('hero-description').textContent = view.overall === 'maintenance' && typeof manualMessage === 'string' && manualMessage.trim() ? manualMessage : hero[2];
   $('team-notice').hidden = !redirectedFromIms && !['down', 'degraded', 'maintenance'].includes(view.overall);
   $('overall-label').textContent = text(view.overall);
-  $('visual-label').textContent = view.overall === 'unknown' ? text('unavailable') : text(view.overall);
+  $('visual-label').textContent = view.checking ? text('checking') : view.overall === 'unknown' ? text('unavailable') : text(view.overall);
   $('monitor-label').textContent = view.fresh ? text('monitorFresh') : hasTimestamp ? text('monitorStale') : text('monitorWaiting');
   $('monitor-label').parentElement.classList.toggle('is-fresh', view.fresh);
   $('last-checked').textContent = dateLabel(snapshot?.checkedAt);
